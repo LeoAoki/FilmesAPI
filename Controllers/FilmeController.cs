@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using FilmeAPI.Data.Dtos;
 using FilmesAPI.Data;
 using FilmesAPI.Models;
@@ -14,22 +15,28 @@ namespace FilmesAPI.Controllers
     public class FilmeController : ControllerBase
     {
         private FilmeContext _context;
-        public FilmeController(FilmeContext context)
+        private IMapper _mapper;
+
+        public FilmeController(FilmeContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
 
         [HttpPost]
         public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
         {
-            Filme filme = new Filme
-            {
-                Titulo = filmeDto.Titulo,
-                Genero = filmeDto.Genero,
-                Duracao = filmeDto.Duracao,
-                Diretor = filmeDto.Diretor
-            };
+            // Filme filme = new Filme
+            // {
+            //     Titulo = filmeDto.Titulo,
+            //     Genero = filmeDto.Genero,
+            //     Duracao = filmeDto.Duracao,
+            //     Diretor = filmeDto.Diretor
+            // };
+            // ---- Implementando AutoMapper: ----
+            // Instancia do AutoMapper, convertendo para um Filme, a partir de CreateFilmeDto
+            Filme filme = _mapper.Map<Filme>(filmeDto);
 
             _context.Filmes.Add(filme);
             _context.SaveChanges();
@@ -54,16 +61,20 @@ namespace FilmesAPI.Controllers
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if(filme != null)
             {
-                ReadFilmeDto filmeDto = new ReadFilmeDto
-                {
-                    Titulo = filme.Titulo,
-                    Diretor = filme.Diretor,
-                    Duracao = filme.Duracao,
-                    Genero = filme.Genero,
-                    Id = filme.Id,
-                    HoraDaConsulta = DateTime.Now
-                };
-                return Ok(filme);
+                // ReadFilmeDto filmeDto = new ReadFilmeDto
+                // {
+                //     Titulo = filme.Titulo,
+                //     Diretor = filme.Diretor,
+                //     Duracao = filme.Duracao,
+                //     Genero = filme.Genero,
+                //     Id = filme.Id,
+                //     HoraDaConsulta = DateTime.Now
+                // };
+                // ---- Implementando AutoMapper: ----
+                // Instancia do AutoMapper, convertendo de Filme, para de ReadFilmeDto
+                ReadFilmeDto filmeDto = _mapper.Map<ReadFilmeDto>(filme);    
+
+                return Ok(filmeDto);
             }
             return NotFound();
         }
@@ -75,10 +86,14 @@ namespace FilmesAPI.Controllers
             if(filme == null)
                 return NotFound();
             
-            filme.Titulo = filmeDto.Titulo;
-            filme.Genero = filmeDto.Genero;
-            filme.Duracao = filmeDto.Duracao;
-            filme.Diretor = filmeDto.Diretor;
+            // filme.Titulo = filmeDto.Titulo;
+            // filme.Genero = filmeDto.Genero;
+            // filme.Duracao = filmeDto.Duracao;
+            // filme.Diretor = filmeDto.Diretor;
+            // ---- Implementando AutoMapper: ----
+            // Sobrescrevendo as informações do filme com as informações de filmeDto
+            _mapper.Map(filmeDto, filme);
+
             _context.SaveChanges();
             return NoContent();
         }
