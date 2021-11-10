@@ -30,7 +30,7 @@ namespace FilmesAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(opts =>
-                opts.UseSqlServer(Configuration.GetConnectionString("FilmeConnection")));
+                opts.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("FilmeConnection")));
             
             services.AddControllers();
             services.AddSwaggerGen(c =>
