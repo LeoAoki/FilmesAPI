@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using FilmesApi.Data;
-using FilmesAPI.Data.Dtos.Gerente;
+using FilmesAPI.Data;
+using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +23,7 @@ namespace Filmes.API.Controllers
             _mapper = mapper;
         }
 
+        [HttpPost]
         public IActionResult AdicionaGerente(CreateGerenteDto dto)
         {
             Gerente gerente = _mapper.Map<Gerente>(dto);
@@ -31,6 +32,7 @@ namespace Filmes.API.Controllers
             return CreatedAtAction(nameof(RecuperaGerentePorId), new { Id = gerente.Id }, gerente);
         }
 
+        [HttpGet("{id}")]
         public IActionResult RecuperaGerentePorId(int id)
         {
             Gerente gerente = _context.Gerentes.FirstOrDefault(gerente => gerente.Id == id);

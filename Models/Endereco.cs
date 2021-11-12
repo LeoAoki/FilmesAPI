@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FilmesAPI.Models;
 
-namespace FilmesApi.Models
+namespace FilmesAPI.Models
 {
     public class Endereco
     {

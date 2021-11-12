@@ -2,7 +2,7 @@
 
 namespace FilmesAPI.Migrations
 {
-    public partial class Relacionandocinemaeendereco : Migration
+    public partial class RelacionandoGerenteeCinema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,13 +39,27 @@ namespace FilmesAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Gerentes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gerentes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cinemas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EnderecoId = table.Column<int>(type: "int", nullable: false)
+                    EnderecoId = table.Column<int>(type: "int", nullable: false),
+                    GerenteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,6 +70,12 @@ namespace FilmesAPI.Migrations
                         principalTable: "Enderecos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Cinemas_Gerentes_GerenteId",
+                        column: x => x.GerenteId,
+                        principalTable: "Gerentes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -63,6 +83,11 @@ namespace FilmesAPI.Migrations
                 table: "Cinemas",
                 column: "EnderecoId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cinemas_GerenteId",
+                table: "Cinemas",
+                column: "GerenteId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -75,6 +100,9 @@ namespace FilmesAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Enderecos");
+
+            migrationBuilder.DropTable(
+                name: "Gerentes");
         }
     }
 }
